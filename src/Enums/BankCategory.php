@@ -9,6 +9,7 @@ enum BankCategory: string
     case SYARIAH = 'syariah';
     case DIGITAL = 'digital';
     case BPD = 'bpd';
+    case EWALLET = 'ewallet';
 
     public function label(): string
     {
@@ -18,6 +19,7 @@ enum BankCategory: string
             self::SYARIAH => 'Bank Syariah',
             self::DIGITAL => 'Bank Digital',
             self::BPD => 'Bank Pembangunan Daerah (BPD)',
+            self::EWALLET => 'Dompet Digital / E-Wallet',
         };
     }
 }

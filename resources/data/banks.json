@@ -682,5 +682,65 @@
     "account_lengths": [10],
     "account_regex": "^[0-9]{10}$",
     "is_active": true
+  },
+  {
+    "code": "GOPAY",
+    "name": "PT GoTo Gojek Tokopedia / GoPay",
+    "short_name": "GoPay",
+    "aliases": ["gopay", "go-pay", "gojek"],
+    "category": "ewallet",
+    "account_lengths": [10, 11, 12, 13, 14],
+    "account_regex": "^(08|628)[0-9]{8,12}$",
+    "is_active": true
+  },
+  {
+    "code": "OVO",
+    "name": "PT Visionet Internasional / OVO",
+    "short_name": "OVO",
+    "aliases": ["ovo", "ovo cash"],
+    "category": "ewallet",
+    "account_lengths": [10, 11, 12, 13, 14],
+    "account_regex": "^(08|628)[0-9]{8,12}$",
+    "is_active": true
+  },
+  {
+    "code": "DANA",
+    "name": "PT Espay Debit Indonesia Koe / DANA",
+    "short_name": "DANA",
+    "aliases": ["dana", "dompet dana"],
+    "category": "ewallet",
+    "account_lengths": [10, 11, 12, 13, 14],
+    "account_regex": "^(08|628)[0-9]{8,12}$",
+    "is_active": true
+  },
+  {
+    "code": "SHOPEEPAY",
+    "name": "PT AirPay International Indonesia / ShopeePay",
+    "short_name": "ShopeePay",
+    "aliases": ["shopeepay", "shopee pay", "spay"],
+    "category": "ewallet",
+    "account_lengths": [10, 11, 12, 13, 14],
+    "account_regex": "^(08|628)[0-9]{8,12}$",
+    "is_active": true
+  },
+  {
+    "code": "LINKAJA",
+    "name": "PT Fintek Karya Nusantara / LinkAja",
+    "short_name": "LinkAja",
+    "aliases": ["linkaja", "link aja", "tcash"],
+    "category": "ewallet",
+    "account_lengths": [10, 11, 12, 13, 14],
+    "account_regex": "^(08|628)[0-9]{8,12}$",
+    "is_active": true
+  },
+  {
+    "code": "ISAKU",
+    "name": "PT Inti Dunia Sukses / i.saku",
+    "short_name": "i.saku",
+    "aliases": ["isaku", "i.saku", "i-saku", "indomaret"],
+    "category": "ewallet",
+    "account_lengths": [10, 11, 12, 13, 14],
+    "account_regex": "^(08|628)[0-9]{8,12}$",
+    "is_active": true
   }
 ]

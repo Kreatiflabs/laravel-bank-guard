@@ -21,6 +21,10 @@ use Kreatiflabs\BankGuard\Models\Bank;
  * @method static bool isValid(string|Bank $bank, string $accountNumber, bool $checkBlacklist = true)
  * @method static Bank validateOrFail(string|Bank $bank, string $accountNumber, bool $checkBlacklist = true)
  * @method static bool isBlacklisted(string $accountNumber, ?string $bankIdentifier = null)
+ * @method static Collection ewallets()
+ * @method static \Kreatiflabs\BankGuard\Models\VirtualAccountInfo detectVirtualAccount(string|Bank $bank, string $accountNumber)
+ * @method static bool isVirtualAccount(string|Bank $bank, string $accountNumber)
+ * @method static \Kreatiflabs\BankGuard\Models\FraudReport checkFraud(string|Bank $bank, string $accountNumber)
  *
  * @see \Kreatiflabs\BankGuard\BankGuard
  */

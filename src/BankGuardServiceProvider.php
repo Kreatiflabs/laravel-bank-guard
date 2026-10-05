@@ -44,11 +44,27 @@ class BankGuardServiceProvider extends ServiceProvider
             );
         });
 
+        $this->app->singleton(\Kreatiflabs\BankGuard\Contracts\FraudCheckerInterface::class, function ($app) {
+            $config = $app['config']->get('bank-guard.fraud', []);
+            if (($config['driver'] ?? 'config') === 'api') {
+                return new \Kreatiflabs\BankGuard\Services\FraudDrivers\CekRekeningApiDriver(
+                    endpoint: $config['api']['endpoint'] ?? null,
+                    apiKey: $config['api']['api_key'] ?? null,
+                    timeout: (int) ($config['api']['timeout'] ?? 5)
+                );
+            }
+
+            return new \Kreatiflabs\BankGuard\Services\FraudDrivers\ConfigFraudDriver(
+                blacklistGuard: $app->make(BlacklistGuard::class)
+            );
+        });
+
         $this->app->singleton('bank-guard', function ($app) {
             return new BankGuard(
                 repository: $app->make(BankRepository::class),
                 validator: $app->make(AccountValidator::class),
-                blacklistGuard: $app->make(BlacklistGuard::class)
+                blacklistGuard: $app->make(BlacklistGuard::class),
+                fraudChecker: $app->make(\Kreatiflabs\BankGuard\Contracts\FraudCheckerInterface::class)
             );
         });
 

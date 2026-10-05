@@ -64,4 +64,21 @@ return [
         //     'is_active' => true,
         // ],
     ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Live Fraud Checker (CekRekening.id / Kredibel / Custom API)
+    |--------------------------------------------------------------------------
+    |
+    | Supported drivers: 'config' (local blacklist array), 'api' (external HTTP API).
+    |
+    */
+    'fraud' => [
+        'driver' => env('BANK_GUARD_FRAUD_DRIVER', 'config'),
+        'api' => [
+            'endpoint' => env('BANK_GUARD_FRAUD_ENDPOINT'),
+            'api_key' => env('BANK_GUARD_FRAUD_API_KEY'),
+            'timeout' => 5,
+        ],
+    ],
 ];

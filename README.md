@@ -159,15 +159,67 @@ $digitalBanks = BankGuard::category(BankCategory::DIGITAL);
 // Ambil semua bank Syariah (BSI, BCA Syariah, Muamalat)
 $syariahBanks = BankGuard::category(BankCategory::SYARIAH);
 
+// Ambil semua E-Wallet Indonesia (GoPay, OVO, DANA, ShopeePay, LinkAja, i.saku)
+$ewallets = BankGuard::ewallets();
+
 // Pencarian bebas berdasarkan kata kunci
 $search = BankGuard::search('syariah');
 ```
 
 ---
 
-### 5. Lapisan Anti-Fraud & Blacklist Guard
+### 5. Deteksi Virtual Account Bank (BCA VA, BRIVA, Mandiri VA, dll.)
 
-Anda dapat mendaftarkan nomor rekening bermasalah di file `config/bank-guard.php` atau menghubungkan resolver dinamis (ke Database / API CekRekening):
+Mendeteksi apakah sebuah nomor rekening merupakan nomor rekening biasa atau **Virtual Account** (beserta provider tujuan dan nomor pelanggan):
+
+```php
+use Kreatiflabs\BankGuard\Facades\BankGuard;
+
+// Cek BCA Virtual Account untuk GoPay:
+$va = BankGuard::detectVirtualAccount('BCA', '390108123456789');
+
+if ($va->is_virtual_account) {
+    echo $va->provider;        // "GoPay / DANA"
+    echo $va->prefix;          // "3901"
+    echo $va->customer_number; // "08123456789"
+}
+
+// Quick Boolean Check:
+if (BankGuard::isVirtualAccount('bca', '390108123456789')) {
+    // Nomor rekening ini adalah Virtual Account!
+}
+```
+
+---
+
+### 6. Integrasi CekRekening.id & Live Anti-Fraud
+
+Memeriksa riwayat penipuan sebuah nomor rekening secara live (mendukung driver lokal dan API eksternal seperti CekRekening.id / Kredibel):
+
+```php
+use Kreatiflabs\BankGuard\Facades\BankGuard;
+
+$report = BankGuard::checkFraud('014', '1234567890');
+
+if ($report->is_reported) {
+    echo "Peringatan: " . $report->status;     // "fraud" atau "suspicious"
+    echo "Jumlah Laporan: " . $report->report_count;
+    echo "Sumber: " . $report->source;         // "CekRekening.id API"
+} else {
+    echo "Rekening bersih dari laporan penipuan.";
+}
+```
+
+Untuk mengaktifkan API CekRekening.id di `.env`:
+```env
+BANK_GUARD_FRAUD_DRIVER=api
+BANK_GUARD_FRAUD_ENDPOINT=https://api.cekrekening.id/v1/check
+BANK_GUARD_FRAUD_API_KEY=your_api_key_here
+```
+
+---
+
+### 7. Custom Database Blacklist Resolver
 
 ```php
 use Kreatiflabs\BankGuard\Validators\BlacklistGuard;

@@ -3,10 +3,14 @@
 namespace Kreatiflabs\BankGuard;
 
 use Illuminate\Support\Collection;
+use Kreatiflabs\BankGuard\Contracts\FraudCheckerInterface;
 use Kreatiflabs\BankGuard\Data\BankRepository;
 use Kreatiflabs\BankGuard\Enums\BankCategory;
 use Kreatiflabs\BankGuard\Models\Bank;
+use Kreatiflabs\BankGuard\Models\FraudReport;
+use Kreatiflabs\BankGuard\Models\VirtualAccountInfo;
 use Kreatiflabs\BankGuard\Sanitizers\AccountSanitizer;
+use Kreatiflabs\BankGuard\Services\VirtualAccountDetector;
 use Kreatiflabs\BankGuard\Validators\AccountValidator;
 use Kreatiflabs\BankGuard\Validators\BlacklistGuard;
 
@@ -15,7 +19,8 @@ class BankGuard
     public function __construct(
         protected BankRepository $repository,
         protected AccountValidator $validator,
-        protected BlacklistGuard $blacklistGuard
+        protected BlacklistGuard $blacklistGuard,
+        protected ?FraudCheckerInterface $fraudChecker = null
     ) {}
 
     /**
@@ -130,6 +135,62 @@ class BankGuard
     public function isBlacklisted(string $accountNumber, ?string $bankIdentifier = null): bool
     {
         return $this->blacklistGuard->isBlacklisted($accountNumber, $bankIdentifier);
+    }
+
+    /**
+     * Get all supported E-Wallets in Indonesia.
+     *
+     * @return Collection<int, Bank>
+     */
+    public function ewallets(): Collection
+    {
+        return $this->category(BankCategory::EWALLET);
+    }
+
+    /**
+     * Detect if an account number is an Indonesian Bank Virtual Account.
+     */
+    public function detectVirtualAccount(string|Bank $bank, string $accountNumber): VirtualAccountInfo
+    {
+        $bankModel = is_string($bank) ? $this->find($bank) : $bank;
+        $bankCode = $bankModel ? $bankModel->code : (string) $bank;
+
+        return VirtualAccountDetector::detect($bankCode, $accountNumber);
+    }
+
+    /**
+     * Check if an account number is a Virtual Account.
+     */
+    public function isVirtualAccount(string|Bank $bank, string $accountNumber): bool
+    {
+        return $this->detectVirtualAccount($bank, $accountNumber)->is_virtual_account;
+    }
+
+    /**
+     * Check live fraud report status for a bank account (CekRekening.id / Local).
+     */
+    public function checkFraud(string|Bank $bank, string $accountNumber): FraudReport
+    {
+        $bankModel = is_string($bank) ? $this->find($bank) : $bank;
+        $bankCode = $bankModel ? $bankModel->code : (string) $bank;
+        $clean = $this->sanitize($accountNumber);
+
+        if ($this->fraudChecker) {
+            return $this->fraudChecker->check($bankCode, $clean);
+        }
+
+        // Fallback: check blacklist guard
+        if ($this->isBlacklisted($clean, $bankCode)) {
+            $reason = $this->blacklistGuard->getReason($clean, $bankCode);
+            return FraudReport::flagged($bankCode, $clean, 1, $reason, 'BankGuard Blacklist');
+        }
+
+        return FraudReport::clean($bankCode, $clean, 'BankGuard Blacklist');
+    }
+
+    public function fraudChecker(): ?FraudCheckerInterface
+    {
+        return $this->fraudChecker;
     }
 
     public function repository(): BankRepository
