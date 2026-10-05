@@ -1,10 +1,11 @@
 # Laravel Bank Guard 🛡️🇮🇩
 
+[![Latest Version on Packagist](https://img.shields.io/packagist/v/kreatiflabs/laravel-bank-guard.svg?style=flat-square)](https://packagist.org/packages/kreatiflabs/laravel-bank-guard)
 [![GitHub Tests Action Status](https://img.shields.io/github/actions/workflow/status/Kreatiflabs/laravel-bank-guard/tests.yml?branch=main&label=tests&style=flat-square)](https://github.com/Kreatiflabs/laravel-bank-guard/actions)
+[![Total Downloads](https://img.shields.io/packagist/dt/kreatiflabs/laravel-bank-guard.svg?style=flat-square)](https://packagist.org/packages/kreatiflabs/laravel-bank-guard)
 [![License](https://img.shields.io/github/license/Kreatiflabs/laravel-bank-guard?style=flat-square)](LICENSE.md)
 [![PHP Version](https://img.shields.io/badge/PHP-%3E%3D%208.2-777BB4.svg?style=flat-square&logo=php&logoColor=white)](https://php.net)
 [![Laravel](https://img.shields.io/badge/Laravel-10%20%7C%2011%20%7C%2012-FF2D20.svg?style=flat-square&logo=laravel&logoColor=white)](https://laravel.com)
-[![GitHub Stars](https://img.shields.io/github/stars/Kreatiflabs/laravel-bank-guard?style=flat-square)](https://github.com/Kreatiflabs/laravel-bank-guard)
 
 **Laravel Bank Guard** adalah library Laravel komprehensif untuk mengelola **Master Data Bank Indonesia**, **Sanitasi Nomor Rekening**, dan **Validasi Akun Bank Presisi** beserta lapisan keamanan **Anti-Fraud / Blacklist Guard**.
 
